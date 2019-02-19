@@ -3,37 +3,11 @@
 import pyperclip
 import pyautogui
 import time
-# pyautogui.PAUSE = 0.4
+import gen_img
+pyautogui.PAUSE = 1
 
 c_wish = u'祝%s新年快乐！圣诞快乐！'
 e_wish = u'Hi %s Happy Holidays!'
-
-# def send_wishes():
-#     friendList = itchat.get_friends(update=False)[1:]
-#     for i in range(len(friendList[40:])):
-#         friend = friendList[i+40]
-#         print("R: " + friend['RemarkName'])
-#         print("N: " + friend['NickName'])
-#         lan_option = input("Language: ")
-#         friendList[i]["lan"] = lan_option
-#
-#         if lan_option == "":
-#             continue
-#         elif lan_option == "c":
-#             s = c_wish
-#         elif lan_option == "e":
-#             s = e_wish
-#
-#         name_opt = input("Name: ")
-#         if name_opt == "r":
-#             wish = s % friend['RemarkName']
-#         elif name_opt == "n":
-#             wish = s % friend['NickName']
-#         else:
-#             wish = s % name_opt
-#         print(wish)
-#         # itchat.send(wish, friend["UserName"])
-#         # itchat.send_image("./card.png", friend["UserName"])
 
 def contruct_wish(RemarkName, NickName):
     print("R: " + RemarkName)
@@ -65,8 +39,9 @@ def contruct_wish(RemarkName, NickName):
 
 def send_wishes_gui():
     while True:
+        pyperclip.copy('Hi')
         pyautogui.press('down')
-        pyautogui.click(2054, 1950)
+        # pyautogui.click(2054, 1950)
         # send = input("Send: ")
         # if send == " ":
         #     pyautogui.click(278, 2060)
@@ -74,31 +49,49 @@ def send_wishes_gui():
         #     pyautogui.click(278, 2060)
         #
         #     continue
-        pyautogui.click(1041, 359) #r
+
+        pyautogui.click(1053, 426, clicks=2, interval=.5) #r
         pyautogui.hotkey('ctrl', 'a')
         pyautogui.hotkey('ctrl', 'c')
-
         RemarkName = pyperclip.paste()
-        pyautogui.click(925, 163, 2) #NickName
+
+        pyautogui.click(922, 188, 2)  # NickName
         pyautogui.hotkey('ctrl', 'c')
         NickName = pyperclip.paste()
+        if NickName == '紫林':
+            return
+        if RemarkName == "Hi":
+            RemarkName = NickName
+        print(RemarkName)
 
-        pyautogui.click(x=1189, y=620) #message btn
-        pyautogui.click(x=1189, y=668) #message btn loc 2
+        #
+        # pyautogui.click(x=1189, y=620) #message btn
+        # pyautogui.click(x=1189, y=668) #message btn loc 2
+        #
+        # pyautogui.click(2054, 1950)
+        # wish = contruct_wish(RemarkName, NickName)
 
-        pyautogui.click(2054, 1950)
-        wish = contruct_wish(RemarkName, NickName)
-        pyautogui.click(1193, 1993)
+        gen_img.gen_img(RemarkName)
+        for y in range(615, 800, 20):
+            pyautogui.click(1111, y)
+        # res = pyautogui.locateOnScreen('msg_2.jpg')
+        # if not res:
+        #     res = []
+        #     res.append(1214)
+        #     res.append(703)
+        # pyautogui.click(res[0], res[1]) #msg
 
-        if wish != None:
-            print(wish)
-            pyperclip.copy(wish)
-            pyautogui.hotkey('ctrl', 'v')
-            time.sleep(.1)
-            pyautogui.press('enter')
-            pyautogui.hotkey('ctrl', 'win', '1')  # ctrl-v to paste
-            time.sleep(.3)
-            pyautogui.press('enter')
+        # if wish != None:
+        # print(wish)
+        # pyperclip.copy(wish)
+        pyautogui.click(996, 1786) #contact list
+        # time.sleep(1)
+        pyautogui.hotkey('ctrl', 'v')
+        time.sleep(1)
+        pyautogui.press('enter')
+        # pyautogui.hotkey('ctrl', 'win', '1')  # ctrl-v to paste
+        # time.sleep(.3)
+        # pyautogui.press('enter')
         pyautogui.click(x=45, y=215) #contact list
 
 # itchat.auto_login(True)
