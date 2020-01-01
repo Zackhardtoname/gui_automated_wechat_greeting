@@ -1,3 +1,5 @@
+
+
 def send_wishes():
     friendList = itchat.get_friends(update=False)[1:]
     for i in range(len(friendList[40:])):
