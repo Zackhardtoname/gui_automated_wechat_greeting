@@ -48,7 +48,7 @@ class Gen_Img():
 
     def gen_img(self, RemarkName=""):
         header = "亲爱的" + RemarkName + "，"
-        msg = u"感谢您陪我度过难忘温暖的2019，"
+        msg = u"感谢您陪我度过难忘的2019，"
         msg2 = u"祝您在2020年万事如意！"
         footer = u"Zack (张羿)"
         footer2 = u"zackLight.com"
@@ -64,15 +64,10 @@ class Gen_Img():
         self.update_pos_and_font(next_font=self.footer_font, text=footer)
         self.update_pos_and_font(next_font=self.footer_font, text=footer2)
 
-        # cur_pos = self.update_pos_and_font(cur_pos, font, msg)
-        # self.draw.text(self.cur_pos, footer2, font=font, fill=self.font_color)
 
-        self.img.save(f'./cards/{RemarkName}.jpg')
-        filepath = f'./cards/{RemarkName}.jpg'
-        image = Image.open(filepath)
 
         output = BytesIO()
-        image.convert("RGB").save(output, "BMP")
+        self.img.convert("RGB").save(output, "BMP")
         data = output.getvalue()[14:]
         output.close()
 
@@ -80,4 +75,4 @@ class Gen_Img():
 
 if __name__ == "__main__":
     generator = Gen_Img()
-    generator.gen_img("Zack")
+    generator.gen_img("Josh")

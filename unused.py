@@ -28,3 +28,18 @@
 # pyautogui.hotkey('ctrl', 'win', '1')  # ctrl-v to paste
 # time.sleep(.3)
 # pyautogui.press('enter')
+
+# import itchat
+#   ...:
+#   ...:itchat.auto_login(True)
+#
+# friends = itchat.get_friends()
+# with open('friends.pkl', 'wb') as f:
+#    ...:    pickle.dump(friends, f)
+
+# cur_pos = self.update_pos_and_font(cur_pos, font, msg)
+# self.draw.text(self.cur_pos, footer2, font=font, fill=self.font_color)
+
+# image = Image.open(filepath)
+# self.img.save(f'./cards/{RemarkName}.jpg')
+# image = Image.open(filepath)

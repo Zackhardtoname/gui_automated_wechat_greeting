@@ -9,41 +9,41 @@ pyautogui.PAUSE = 1
 with open('friends.pkl', 'rb') as f:
     friends = pickle.load(f)
 
-def send_wishes_gui(generator):
+def send_wishes_gui():
     for friend in friends:
-        pyautogui.press('down')
+        if ("sent" not in friend) and friend["NickName"] != "Zack Light":
+            alias = friend["RemarkName"]
+            username = friend["NickName"]
 
-        pyperclip.copy('no_alias')
-        pyautogui.click(1053, 426, clicks=2, interval=.5) #alias
-        pyautogui.hotkey('ctrl', 'c')
-        alias = pyperclip.paste()
+            name_to_use = alias if alias != "" else username
+            print(name_to_use)
 
-        pyautogui.click(922, 188, 2)  # username
-        pyautogui.hotkey('ctrl', 'a')
-        pyautogui.hotkey('ctrl', 'c')
-        username = pyperclip.paste()
+            # search
+            pyautogui.click(270, 65)
+            pyautogui.click(270, 65)
+            to_search = friend["NickName"] + " " + friend["RemarkName"]
+            pyperclip.copy(to_search)
+            pyautogui.hotkey('ctrl', 'v')
+            pyautogui.click(505, 205)
 
-        if alias == "no_alias":
-            alias = username
-        print(alias)
+            # image
+            generator = gen_img.Gen_Img()
+            generator.gen_img(name_to_use)
+            pyautogui.hotkey('ctrl', 'v')
+            time.sleep(2)
 
-        name_to_use = alias if alias != "no_alias" else username
+            # wish
+            wish = f'{name_to_use}, 祝您新年快乐!'
+            pyperclip.copy(wish)
+            pyautogui.hotkey('ctrl', 'v')
+            time.sleep(2)
+            pyautogui.press('enter')
 
-        generator.gen_img(name_to_use)
-        for y in range(615, 800, 20):
-            pyautogui.click(1111, y)
+            pyautogui.click(2542, 534)
+            friend["sent"] = True
 
-        pyautogui.hotkey('ctrl', 'v')
-        time.sleep(2)
-
-        wish = f'{name_to_use}, 祝您新年快乐!'
-        pyperclip.copy(wish)
-        pyautogui.hotkey('ctrl', 'v')
-
-        pyautogui.press('enter')
-
-        pyautogui.click(x=45, y=215) #contact list
+            with open('friends.pkl', 'wb') as f:
+                pickle.dump(friends, f)
 
 if __name__ == "__main__":
-    generator = gen_img.Gen_Img()
-    send_wishes_gui(generator)
+    send_wishes_gui()
