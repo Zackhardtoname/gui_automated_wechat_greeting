@@ -6,15 +6,15 @@ from io import BytesIO
 
 class Gen_Img():
     def __init__(self):
-        self.font_family = "./font_families/PangMenZhengDaoCuShuTi-2.ttf"
-        self.header_font_size = 90
+        self.font_family = "font_families/YiPinQingYeShouXieTi-2.ttf"
+        self.header_font_size = 70
         self.header_font = ImageFont.truetype(self.font_family, self.header_font_size)
         self.body_footer_font_size = int(self.header_font_size * .9)
         self.msg_font = ImageFont.truetype(self.font_family, self.body_footer_font_size)
         self.footer_font = ImageFont.truetype(self.font_family, self.body_footer_font_size)
 
-        self.img = Image.open("./imgs/paper_lantern.jpg")
-        self.font_color = "white"
+        self.img = Image.open("./imgs/lunar_new_year.png")
+        self.font_color = "black"
         self.W, self.H = self.img.size
 
     def send_to_clipboard(self, clip_type, data):
@@ -43,18 +43,19 @@ class Gen_Img():
         # update font
         self.cur_font = next_font
 
-        self.cur_pos = (cur_w, cur_h)
+        line_separation = 20
+        self.cur_pos = (cur_w, cur_h + line_separation)
         self.draw.text(self.cur_pos, text, font=self.cur_font, fill=self.font_color)
 
     def gen_img(self, RemarkName=""):
-        header = "亲爱的" + RemarkName + "，"
-        msg = u"感谢您陪我度过难忘的2019，"
-        msg2 = u"祝您在2020年万事如意！"
-        footer = u"Zack (张羿)"
-        footer2 = u"zackLight.com"
+        header = "祝" + RemarkName + "，"
+        msg = u"感恩遇见！感谢帮助！"
+        msg2 = u"祝新的一年，美好相随，事事顺意！"
+        footer = u"刘建萍"
+        # footer2 = u"zackLight.com"
 
         self.draw = ImageDraw.Draw(self.img)
-        self.cur_pos = (self.W // 8, self.H // 5)
+        self.cur_pos = (self.W // 10, self.H // 2.5)
 
         self.cur_font = self.header_font
         self.draw.text(self.cur_pos, header, font=self.cur_font, fill=self.font_color)
@@ -62,7 +63,7 @@ class Gen_Img():
         self.update_pos_and_font(next_font=self.msg_font, text=msg)
         self.update_pos_and_font(next_font=self.msg_font, text=msg2)
         self.update_pos_and_font(next_font=self.footer_font, text=footer)
-        self.update_pos_and_font(next_font=self.footer_font, text=footer2)
+        # self.update_pos_and_font(next_font=self.footer_font, text=footer2)
 
 
 
@@ -75,4 +76,4 @@ class Gen_Img():
 
 if __name__ == "__main__":
     generator = Gen_Img()
-    generator.gen_img("Josh")
+    generator.gen_img("您")
