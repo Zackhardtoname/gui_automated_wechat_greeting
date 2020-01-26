@@ -5,7 +5,8 @@ import time
 import gen_img
 import pickle
 pyautogui.PAUSE = 1
-pause_time = 1
+pause_time = 0
+image_pause = 0
 
 try:
     with open('friends.pkl', 'rb') as f:
@@ -18,37 +19,52 @@ except Exception as e:
     with open('friends.pkl', 'wb') as f:
         pickle.dump(friends, f)
 
+def fuzzy_match(fn, confidence=.9):
+    return pyautogui.locateCenterOnScreen(fn, confidence=.9)
+
 def check_logged_in():
-    while(not pyautogui.locateCenterOnScreen('./search_img.png')):
-        confirm = pyautogui.locateCenterOnScreen('./compromised_img.png') or pyautogui.locateCenterOnScreen('./login_img.png')
+    while(not fuzzy_match('./imgs/search_img.png')):
+        confirm = fuzzy_match('./imgs/compressed.jpg') or fuzzy_match('./imgs/login_img.png')
         if confirm:
             pyautogui.click(confirm[0], confirm[1])
             pyautogui.click(confirm[0], confirm[1] + 100)
 
-            time.sleep(3)
+            time.sleep(pause_time)
             pyautogui.hotkey('winleft', 'left')
-
             # pyautogui.hotkey('winleft', 'down')
 
+def has_sent_img():
+    return fuzzy_match('./imgs/2020_msg_screenshot.png') or fuzzy_match('./imgs/2020_delete.png')
+
+def paste_img(name_to_use):
+    generator = gen_img.Gen_Img()
+    generator.gen_img(name_to_use)
+    pyautogui.hotkey('ctrl', 'v')
+
+    time.sleep(pause_time + image_pause)
+
+def paste_wish(name_to_use):
+    wish = f'祝{name_to_use}2020新年快乐!'
+    pyperclip.copy(wish)
+    pyautogui.hotkey('ctrl', 'v')
+    time.sleep(pause_time)
+
 def send_wishes_gui():
-    delay = False
-    missed = []
+    # missed = ["任朔禾"]
     skip = ["Zack Light"]
+    total_num_friends = len(friends)
 
     for i in range(len(friends)):
         friend = friends[i]
+        if "Checked" in friend:
+            continue
 
         alias = friend["RemarkName"]
         username = friend["NickName"]
         name_to_use = alias if alias != "" else username
 
-        if delay:
-            delay = not (name_to_use in missed)
-            if delay:
-                continue
-
-        if (("sent" not in friend)) and (name_to_use not in skip):
-            print(f"{i}: {name_to_use}")
+        if (name_to_use not in skip):
+            print(f"{i}/{total_num_friends}: {name_to_use}")
 
             # search
             pyautogui.click(270, 65)
@@ -56,25 +72,24 @@ def send_wishes_gui():
             to_search = friend["NickName"] + " " + friend["RemarkName"]
             pyperclip.copy(to_search)
             pyautogui.hotkey('ctrl', 'v')
+            time.sleep(pause_time)
             pyautogui.click(505, 205)
-            pyperclip.copy("")
 
-            # image
-            generator = gen_img.Gen_Img()
-            generator.gen_img(name_to_use)
-            pyautogui.hotkey('ctrl', 'v')
-            time.sleep(pause_time)
-
-            # wish
-            wish = f'祝{name_to_use}新年快乐!'
-            pyperclip.copy(wish)
-            pyautogui.hotkey('ctrl', 'v')
-            time.sleep(pause_time)
-            pyautogui.press('enter')
+            if not has_sent_img():
+                # Send
+                pyperclip.copy("")
+                paste_img(name_to_use)
+                if "sent" not in friend:
+                    paste_wish(name_to_use)
+                else:
+                    pyperclip.copy("补个图:)")
+                    pyautogui.hotkey('ctrl', 'v')
+                    time.sleep(pause_time)
+                pyautogui.press('enter')
 
             friend["sent"] = True
-
-            check_logged_in()
+            friend["Checked"] = True
+            # check_logged_in()
 
             with open('friends.pkl', 'wb') as f:
                 pickle.dump(friends, f)
