@@ -76,4 +76,4 @@ class Gen_Img():
 
 if __name__ == "__main__":
     generator = Gen_Img()
-    generator.gen_img("Jeethi")
+    generator.gen_img("")
