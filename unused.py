@@ -43,3 +43,16 @@
 # image = Image.open(filepath)
 # self.img.save(f'./cards/{RemarkName}.jpg')
 # image = Image.open(filepath)
+
+# def get_friends():
+# try:
+#     with open('friends.pkl', 'rb') as f:
+#         friends = pickle.load(f)
+# except Exception as e:
+#     print(e)
+#     import itchat
+#     itchat.auto_login()
+#     friends = itchat.get_friends(update=False)[1:]
+#     with open('friends.pkl', 'wb') as f:
+#         pickle.dump(friends, f)
+# return friends

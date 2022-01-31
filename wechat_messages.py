@@ -1,31 +1,67 @@
-#coding=utf8
+# coding=utf8
 import pyperclip
 import pyautogui
 from tqdm import tqdm
 import gen_img
 import pickle
+
 pyautogui.PAUSE = 1
 pause_time = 0
 image_pause = 0
 
+top_friend_position = (741, -1107)
+alias_position = (2603, -1687)
+username_position = (2445, -1951)
+search_bar = (787, -2091)
+first_search_res = (728, -1923)
+id_position = (2614, -1558)
+
+
+def copy_selection():
+    pyperclip.copy("")
+    pyautogui.hotkey('ctrl', 'c')
+    val = pyperclip.paste()
+    pyperclip.copy("")
+    return val
+
+
+def click(coords, numClicks=1):
+    pyautogui.click(coords[0], coords[1], numClicks)
+
+
 def get_friends():
-    try:
-        with open('friends.pkl', 'rb') as f:
-            friends = pickle.load(f)
-    except Exception as e:
-        print(e)
-        import itchat
-        itchat.auto_login()
-        friends = itchat.get_friends(update=False)[1:]
-        with open('friends.pkl', 'wb') as f:
-            pickle.dump(friends, f)
+    # try:
+    #     with open('friends.pkl', 'rb') as f:
+    #         friends = pickle.load(f)
+    # except Exception as e:
+    friends = []
+    while len(friends) < 3:
+        friend = {}
+        # click(top_friend_position)
+        click(id_position, 2)
+        friend['id'] = copy_selection()
+        click(alias_position, 2)
+        pyautogui.hotkey('ctrl', 'a')
+        friend['alias'] = copy_selection()
+        click(username_position, 2)
+        friend['username'] = copy_selection()
+        print(friend)
+        friends.append(friend)
+        pyautogui.hotkey('shift', 'tab')
+        pyautogui.press('down')
+
+    with open('friends.pkl', 'wb') as f:
+        pickle.dump(friends, f)
+
     return friends
+
 
 def fuzzy_match(fn, confidence=.9):
     return pyautogui.locateCenterOnScreen(fn, confidence=confidence)
 
+
 def check_logged_in():
-    while(not fuzzy_match('./imgs/search_img.png')):
+    while (not fuzzy_match('./imgs/search_img.png')):
         confirm = fuzzy_match('./imgs/compressed.jpg') or fuzzy_match('./imgs/login_img.png')
         if confirm:
             pyautogui.click(confirm[0], confirm[1])
@@ -33,18 +69,24 @@ def check_logged_in():
             pyautogui.hotkey('winleft', 'left')
             # pyautogui.hotkey('winleft', 'down')
 
+
 def has_sent_img():
     return fuzzy_match('./imgs/2020_delete.png')
 
+
 def paste_img(name_to_use):
+    pyperclip.copy("")
     generator = gen_img.Gen_Img()
     generator.gen_img(name_to_use)
     pyautogui.hotkey('ctrl', 'v')
 
+
 def paste_wish(name_to_use):
-    wish = f'祝{name_to_use}2020新年快乐!'
+    pyperclip.copy("")
+    wish = f'2021即将结束，回首过去，感恩遇见。毕业后我在西雅图亚马逊总部工作，感谢您过往的帮助!\n祝{name_to_use}2022年虎虎生威，欢愉胜意，万事可期!'
     pyperclip.copy(wish)
     pyautogui.hotkey('ctrl', 'v')
+
 
 def send_wishes_gui():
     # missed = [""]
@@ -53,43 +95,35 @@ def send_wishes_gui():
     friends = get_friends()
     for i in tqdm(range(len(friends))):
         friend = friends[i]
-        alias = friend["RemarkName"]
-        username = friend["NickName"]
+        alias = friend["alias"]
+        username = friend["username"]
         name_to_use = alias if alias != "" else username
 
-        if (name_to_use in skip):
+        if name_to_use in skip or "sent" in friend:
             continue
 
         print(f"{name_to_use}")
 
         # search
-        pyautogui.click(270, 65)
-        pyautogui.click(270, 65)
-        to_search = friend["NickName"] + " " + friend["RemarkName"]
+        click(search_bar, 2)
+        to_search = friend["id"]
+        pyperclip.copy("")
         pyperclip.copy(to_search)
         pyautogui.hotkey('ctrl', 'v')
-        pyautogui.click(505, 205)
+        click(first_search_res)
 
-        if not has_sent_img():
-            pyperclip.copy("")
-            paste_img(name_to_use)
-
-            if "sent" not in friend:
-                paste_wish(name_to_use)
-            else:
-                pyperclip.copy("补个图:)")
-                pyautogui.hotkey('ctrl', 'v')
-
-            pyautogui.press('enter')
-        else:
-            friend["Checked"] = True
-
+        # send
+        pyperclip.copy("")
+        paste_img(name_to_use)
+        paste_wish(name_to_use)
+        pyautogui.press('enter')
         friend["sent"] = True
 
-        check_logged_in()
+        # check_logged_in()
         with open('friends.pkl', 'wb') as f:
             pickle.dump(friends, f)
 
+
 if __name__ == "__main__":
-    # time.sleep(60 * 60 * 5)
+    # get_friends()
     send_wishes_gui()

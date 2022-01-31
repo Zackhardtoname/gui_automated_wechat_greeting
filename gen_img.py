@@ -4,6 +4,7 @@ from PIL import ImageDraw
 import win32clipboard
 from io import BytesIO
 
+
 class Gen_Img():
     def __init__(self):
         self.font_family = "font_families/HuXiaoBoSaoBaoTi-2.otf"
@@ -15,7 +16,7 @@ class Gen_Img():
         self.msg_font = ImageFont.truetype(self.font_family, self.body_footer_font_size)
         self.footer_font = ImageFont.truetype(self.font_family, self.body_footer_font_size)
 
-        self.img = Image.open("./imgs/compressed.jpg")
+        self.img = Image.open("./imgs/2022.jpg")
         self.font_color = (228, 198, 156)
         self.W, self.H = self.img.size
 
@@ -51,13 +52,13 @@ class Gen_Img():
 
     def gen_img(self, RemarkName=""):
         header = "祝" + RemarkName + "，"
-        msg = u"万事如意"
-        msg2 = u"身体健康"
-        footer = u"张羿"
+        msg = u"欢愉胜意"
+        msg2 = u"万事可期"
+        footer = u"    张羿"
         footer2 = u"zackLight.com"
 
         self.draw = ImageDraw.Draw(self.img)
-        self.cur_pos = (20, self.H //3.15)
+        self.cur_pos = (20, 20)
 
         self.cur_font = self.header_font
         self.draw.text(self.cur_pos, header, font=self.cur_font, fill=self.font_color)
@@ -74,6 +75,7 @@ class Gen_Img():
 
         self.send_to_clipboard(win32clipboard.CF_DIB, data)
 
+
 if __name__ == "__main__":
     generator = Gen_Img()
-    generator.gen_img("")
+    generator.gen_img("Zack Light")
