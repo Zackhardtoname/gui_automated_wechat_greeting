@@ -30,28 +30,26 @@ def click(coords, numClicks=1):
 
 
 def get_friends():
-    # try:
-    #     with open('friends.pkl', 'rb') as f:
-    #         friends = pickle.load(f)
-    # except Exception as e:
-    friends = []
-    while len(friends) < 3:
-        friend = {}
-        # click(top_friend_position)
-        click(id_position, 2)
-        friend['id'] = copy_selection()
-        click(alias_position, 2)
-        pyautogui.hotkey('ctrl', 'a')
-        friend['alias'] = copy_selection()
-        click(username_position, 2)
-        friend['username'] = copy_selection()
-        print(friend)
-        friends.append(friend)
-        pyautogui.hotkey('shift', 'tab')
-        pyautogui.press('down')
+    try:
+        with open('friends.pkl', 'rb') as f:
+            friends = pickle.load(f)
+    except Exception as e:
+        friends = []
+        while len(friends) < 333:
+            friend = {}
+            # click(top_friend_position)
+            click(alias_position, 2)
+            pyautogui.hotkey('ctrl', 'a')
+            friend['alias'] = copy_selection()
+            click(username_position, 2)
+            friend['username'] = copy_selection()
+            print(friend)
+            friends.append(friend)
+            pyautogui.hotkey('shift', 'tab')
+            pyautogui.press('down')
 
-    with open('friends.pkl', 'wb') as f:
-        pickle.dump(friends, f)
+        with open('friends.pkl', 'wb') as f:
+            pickle.dump(friends, f)
 
     return friends
 
@@ -83,14 +81,14 @@ def paste_img(name_to_use):
 
 def paste_wish(name_to_use):
     pyperclip.copy("")
-    wish = f'2021即将结束，回首过去，感恩遇见。毕业后我在西雅图亚马逊总部工作，感谢您过往的帮助!\n祝{name_to_use}2022年虎虎生威，欢愉胜意，万事可期!'
+    wish = f'2021即将结束，回首过去，感恩遇见。\n\n毕业后我在西雅图亚马逊总部工作，感谢您过往的帮助!\n\n祝{name_to_use}2022年虎虎生威，欢愉胜意，万事可期!'
     pyperclip.copy(wish)
     pyautogui.hotkey('ctrl', 'v')
 
 
 def send_wishes_gui():
     # missed = [""]
-    skip = ["Zack Light"]
+    skip = ["Zack Light", "A℡小袋鼠在线"]
 
     friends = get_friends()
     for i in tqdm(range(len(friends))):
@@ -106,7 +104,8 @@ def send_wishes_gui():
 
         # search
         click(search_bar, 2)
-        to_search = friend["id"]
+        to_search = friend["alias"] + " " + friend["username"]
+        # to_search = friend["id"]
         pyperclip.copy("")
         pyperclip.copy(to_search)
         pyautogui.hotkey('ctrl', 'v')
@@ -114,8 +113,8 @@ def send_wishes_gui():
 
         # send
         pyperclip.copy("")
-        paste_img(name_to_use)
         paste_wish(name_to_use)
+        paste_img(name_to_use)
         pyautogui.press('enter')
         friend["sent"] = True
 
