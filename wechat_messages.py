@@ -3,7 +3,6 @@ import pyperclip
 import pyautogui
 from tqdm import tqdm
 import gen_img
-import time
 import pickle
 pyautogui.PAUSE = 1
 pause_time = 0
