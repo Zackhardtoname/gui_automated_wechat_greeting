@@ -54,8 +54,8 @@ class Gen_Img():
         header = "祝" + RemarkName + "，"
         msg = u"新春愉快"
         msg2 = u"虎虎生威"
-        footer = u"    张羿"
-        footer2 = u"zackLight.com"
+        footer = u"     Zack"
+        footer2 = u""
 
         self.draw = ImageDraw.Draw(self.img)
         self.cur_pos = (20, 20)
@@ -78,4 +78,4 @@ class Gen_Img():
 
 if __name__ == "__main__":
     generator = Gen_Img()
-    generator.gen_img("张阿姨")
+    generator.gen_img("Xiao")
