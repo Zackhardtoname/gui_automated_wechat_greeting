@@ -8,7 +8,7 @@ from io import BytesIO
 class Gen_Img():
     def __init__(self):
         self.font_family = "font_families/HuXiaoBoSaoBaoTi-2.otf"
-        self.header_font_size = 75
+        self.header_font_size = 60
         self.line_separation = 0
 
         self.header_font = ImageFont.truetype(self.font_family, self.header_font_size)
@@ -16,8 +16,8 @@ class Gen_Img():
         self.msg_font = ImageFont.truetype(self.font_family, self.body_footer_font_size)
         self.footer_font = ImageFont.truetype(self.font_family, self.body_footer_font_size)
 
-        self.img = Image.open("./imgs/2022.jpg")
-        self.font_color = (228, 198, 156)
+        self.img = Image.open("./imgs/2023_compressed.jpg")
+        self.font_color = (190, 25, 29)
         self.W, self.H = self.img.size
 
     def send_to_clipboard(self, clip_type, data):
@@ -32,8 +32,6 @@ class Gen_Img():
         cur_size = self.draw.textsize(text, font=next_font)
         cur_w, cur_h = self.cur_pos
         cur_h = self.cur_pos[1] + prev_size[1]
-
-        cur_w = 15
 
         # body indentation
         if prev_font == self.header_font:
@@ -52,13 +50,13 @@ class Gen_Img():
 
     def gen_img(self, RemarkName=""):
         header = "祝" + RemarkName + "，"
-        msg = u"新春愉快"
-        msg2 = u"虎虎生威"
+        msg = u"玉兔迎春迎吉祥，"
+        msg2 = u"新年接福接鸿运。"
         footer = u"     Zack"
-        footer2 = u""
+        footer2 = u"     zackLight.com"
 
         self.draw = ImageDraw.Draw(self.img)
-        self.cur_pos = (20, 20)
+        self.cur_pos = (180, 30)
 
         self.cur_font = self.header_font
         self.draw.text(self.cur_pos, header, font=self.cur_font, fill=self.font_color)
