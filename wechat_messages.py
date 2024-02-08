@@ -1,4 +1,6 @@
 # coding=utf8
+from sys import stderr
+
 import pyperclip
 import pyautogui
 from tqdm import tqdm
@@ -9,10 +11,10 @@ pyautogui.PAUSE = 1
 pause_time = 0
 image_pause = 0
 
-top_friend_position = (741, -1107)
-alias_position = (2736, -1909)
+top_friend_position = (1002, -1107)
+username_position = (2736, -1909)
 bottom_friend_position = (1018, -67)
-username_position = (2445, -1951)
+alias_position = (2445, -1951)  # TODO update
 search_bar = (892, -2097)
 first_search_res = (1069, -1935)
 id_position = (2614, -1558)
@@ -31,55 +33,57 @@ def click(coords, numClicks=1):
 
 
 def get_friends():
+    # Get a list of current friends and save results into a file locally
+    # Every year, delete the pkl file before the process
     try:
         with open('friends.pkl', 'rb') as f:
             friends = pickle.load(f)
-    except Exception as e:
+    except FileNotFoundError:
         friends = []
-
-        for _ in range(377):
+        click(top_friend_position)
+        # hard coded num of friends, so you don't need to detect end of friend list
+        num_friends = 388
+        last_selection = None
+        for _ in tqdm(range(num_friends)):
             friend = {}
-            # click(top_friend_position)
-            click(alias_position, 2)
-            # pyautogui.hotkey('ctrl', 'a')
-            friend['alias'] = copy_selection()
-            # click(username_position, 2)
-            friend['username'] = friend['alias']
+            click(username_position, 2)
+            cur_selection = copy_selection()
+
+            if last_selection == cur_selection:
+                print("here")
+                for _ in range(8):
+                    pyautogui.hotkey('shift', 'tab')
+                pyautogui.press('down')
+                continue
+
+            last_selection = cur_selection
+            friend['username'] = cur_selection
+            # click(alias_position, 2)
+            # friend['alias'] = copy_selection()
             print(friend)
             friends.append(friend)
-            # pyautogui.hotkey('shift', 'tab')
-            click(bottom_friend_position, 1)
+            # Get back to the friend list
+            # 10 is probably more than necessary but
+            for _ in range(7):
+                pyautogui.hotkey('shift', 'tab')
+
+            # click(bottom_friend_position, 1)
             pyautogui.press('down')
 
-        aliases = {friend["alias"]: None for friend in friends if friend["alias"]}
+        # dedup
+        aliases = {friend["alias"] for friend in friends if friend["alias"]}
         unique = []
 
         for alias in aliases:
             people = [friend for friend in friends if friend["alias"] == alias]
+            if len(people) > 1:
+                print(f"WARNING: {len(people)}", file=stderr)
             unique.append(people[0])
 
         with open('friends.pkl', 'wb') as f:
             pickle.dump(unique, f)
 
     return friends
-
-
-def fuzzy_match(fn, confidence=.9):
-    return pyautogui.locateCenterOnScreen(fn, confidence=confidence)
-
-
-def check_logged_in():
-    while (not fuzzy_match('./imgs/search_img.png')):
-        confirm = fuzzy_match('./imgs/compressed.jpg') or fuzzy_match('./imgs/login_img.png')
-        if confirm:
-            pyautogui.click(confirm[0], confirm[1])
-            pyautogui.click(confirm[0], confirm[1] + 100)
-            pyautogui.hotkey('winleft', 'left')
-            # pyautogui.hotkey('winleft', 'down')
-
-
-def has_sent_img():
-    return fuzzy_match('./imgs/2020_delete.png')
 
 
 def paste_img(name_to_use):
@@ -130,5 +134,5 @@ def send_wishes_gui():
 
 
 if __name__ == "__main__":
-    # get_friends()
-    send_wishes_gui()
+    get_friends()
+    # send_wishes_gui()

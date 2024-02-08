@@ -56,3 +56,21 @@
 #     with open('friends.pkl', 'wb') as f:
 #         pickle.dump(friends, f)
 # return friends
+
+# # Sometimes wechat would force log you out after sending too many messages
+# def check_logged_in():
+#     while (not fuzzy_match('./imgs/search_img.png')):
+#         confirm = fuzzy_match('./imgs/compressed.jpg') or fuzzy_match('./imgs/login_img.png')
+#         if confirm:
+#             pyautogui.click(confirm[0], confirm[1])
+#             pyautogui.click(confirm[0], confirm[1] + 100)
+#             pyautogui.hotkey('winleft', 'left')
+#             # pyautogui.hotkey('winleft', 'down')
+#
+#
+# def fuzzy_match(fn, confidence=.9):
+#     return pyautogui.locateCenterOnScreen(fn, confidence=confidence)
+#
+#
+# def has_sent_img():
+#     return fuzzy_match('./imgs/2020_delete.png')
