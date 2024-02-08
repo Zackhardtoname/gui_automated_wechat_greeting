@@ -7,16 +7,16 @@ from io import BytesIO
 
 class Gen_Img():
     def __init__(self):
-        self.font_family = "font_families/HuXiaoBoSaoBaoTi-2.otf"
-        self.header_font_size = 60
+        self.font_family = "font_families/字小魂国风少年体.ttf"
+        self.header_font_size = 55
         self.line_separation = 0
 
         self.header_font = ImageFont.truetype(self.font_family, self.header_font_size)
         self.body_footer_font_size = int(self.header_font_size * 1)
         self.msg_font = ImageFont.truetype(self.font_family, self.body_footer_font_size)
-        self.footer_font = ImageFont.truetype(self.font_family, self.body_footer_font_size)
+        self.footer_font = ImageFont.truetype(self.font_family, self.body_footer_font_size - 5)
 
-        self.img = Image.open("./imgs/2023_compressed.jpg")
+        self.img = Image.open("./imgs/2024.png")
         self.font_color = (190, 25, 29)
         self.W, self.H = self.img.size
 
@@ -41,7 +41,7 @@ class Gen_Img():
         # footer right alignment
         if next_font == self.footer_font and self.cur_font != self.footer_font:
             # cur_w = self.W - cur_size[0] - self.W // 3
-            cur_h = self.H - 180
+            cur_h = self.H - 160
 
         # update font
         self.cur_font = next_font
@@ -50,13 +50,13 @@ class Gen_Img():
 
     def gen_img(self, RemarkName=""):
         header = "祝" + RemarkName + "，"
-        msg = u"玉兔迎春迎吉祥，"
-        msg2 = u"新年接福接鸿运。"
-        footer = u"     Zack"
-        footer2 = u"     zackLight.com"
+        msg = u"龙腾四海，"
+        msg2 = u"瑞气盈门。"
+        footer = u"    Zack"
+        footer2 = u"    zackLight.com"
 
         self.draw = ImageDraw.Draw(self.img)
-        self.cur_pos = (180, 30)
+        self.cur_pos = (350, 40)
 
         self.cur_font = self.header_font
         self.draw.text(self.cur_pos, header, font=self.cur_font, fill=self.font_color)

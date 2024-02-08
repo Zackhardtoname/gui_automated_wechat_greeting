@@ -7,14 +7,15 @@ from tqdm import tqdm
 import gen_img
 import pickle
 
+year = 2024
 pyautogui.PAUSE = 1
 pause_time = 0
 image_pause = 0
 
 top_friend_position = (1002, -1107)
+# username is the remark/alias if set otherwise the name the user has chosen
 username_position = (2736, -1909)
 bottom_friend_position = (1018, -67)
-alias_position = (2445, -1951)  # TODO update
 search_bar = (892, -2097)
 first_search_res = (1069, -1935)
 id_position = (2614, -1558)
@@ -36,46 +37,30 @@ def get_friends():
     # Get a list of current friends and save results into a file locally
     # Every year, delete the pkl file before the process
     try:
-        with open('friends.pkl', 'rb') as f:
+        with open(f'{year}_friends.pkl', 'rb') as f:
             friends = pickle.load(f)
     except FileNotFoundError:
         friends = []
         click(top_friend_position)
         # hard coded num of friends, so you don't need to detect end of friend list
         num_friends = 388
-        last_selection = None
         for _ in tqdm(range(num_friends)):
             friend = {}
             click(username_position, 2)
-            cur_selection = copy_selection()
-
-            if last_selection == cur_selection:
-                print("here")
-                for _ in range(8):
-                    pyautogui.hotkey('shift', 'tab')
-                pyautogui.press('down')
-                continue
-
-            last_selection = cur_selection
-            friend['username'] = cur_selection
-            # click(alias_position, 2)
-            # friend['alias'] = copy_selection()
+            friend['username'] = copy_selection()
             print(friend)
             friends.append(friend)
             # Get back to the friend list
-            # 10 is probably more than necessary but
-            for _ in range(7):
+            for _ in range(2):
                 pyautogui.hotkey('shift', 'tab')
-
-            # click(bottom_friend_position, 1)
             pyautogui.press('down')
 
         # dedup
-        aliases = {friend["alias"] for friend in friends if friend["alias"]}
+        usernames = {friend["username"] for friend in friends if friend["username"]}
         unique = []
 
-        for alias in aliases:
-            people = [friend for friend in friends if friend["alias"] == alias]
+        for username in usernames:
+            people = [friend for friend in friends if friend["username"] == username]
             if len(people) > 1:
                 print(f"WARNING: {len(people)}", file=stderr)
             unique.append(people[0])
@@ -102,14 +87,14 @@ def paste_wish(name_to_use):
 
 def send_wishes_gui():
     # missed = [""]
-    skip = ["Zack Light", "A℡小袋鼠在线"]
+    skip = ["Zack Light"]
     friends = get_friends()
 
     for i in tqdm(range(len(friends))):
         friend = friends[i]
-        name_to_use = friend["alias"]
+        name_to_use = friend["username"]
 
-        if name_to_use in skip or "sent" in friend:
+        if not friend or name_to_use in skip or "sent" in friend:
             continue
 
         print(f"{name_to_use}")
@@ -135,4 +120,4 @@ def send_wishes_gui():
 
 if __name__ == "__main__":
     get_friends()
-    # send_wishes_gui()
+    send_wishes_gui()
