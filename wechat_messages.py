@@ -80,7 +80,7 @@ def paste_img(name_to_use):
 
 def paste_wish(name_to_use):
     pyperclip.copy("")
-    wish = f'祝{name_to_use}福兔迎祥! 感谢您给予的帮助!\n\nzackLight.com'
+    wish = f'祝{name_to_use}龙腾四海，瑞气盈门! 感谢过去一年里您的帮助!\n\nzackLight.com'
     pyperclip.copy(wish)
     pyautogui.hotkey('ctrl', 'v')
 

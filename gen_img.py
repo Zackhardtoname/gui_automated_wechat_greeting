@@ -8,7 +8,7 @@ from io import BytesIO
 class Gen_Img():
     def __init__(self):
         self.font_family = "font_families/字小魂国风少年体.ttf"
-        self.header_font_size = 55
+        self.header_font_size = 40
         self.line_separation = 0
 
         self.header_font = ImageFont.truetype(self.font_family, self.header_font_size)
@@ -16,8 +16,8 @@ class Gen_Img():
         self.msg_font = ImageFont.truetype(self.font_family, self.body_footer_font_size)
         self.footer_font = ImageFont.truetype(self.font_family, self.body_footer_font_size - 5)
 
-        self.img = Image.open("./imgs/2024.png")
-        self.font_color = (190, 25, 29)
+        self.img = Image.open("./imgs/2024_traditional.jpg")
+        self.font_color = (249, 204, 115)
         self.W, self.H = self.img.size
 
     def send_to_clipboard(self, clip_type, data):
@@ -52,11 +52,11 @@ class Gen_Img():
         header = "祝" + RemarkName + "，"
         msg = u"龙腾四海，"
         msg2 = u"瑞气盈门。"
-        footer = u"    Zack"
-        footer2 = u"    zackLight.com"
+        footer  = u"             Zack"
+        footer2 = u"             zackLight.com"
 
         self.draw = ImageDraw.Draw(self.img)
-        self.cur_pos = (350, 40)
+        self.cur_pos = (220, 20)
 
         self.cur_font = self.header_font
         self.draw.text(self.cur_pos, header, font=self.cur_font, fill=self.font_color)
@@ -76,4 +76,4 @@ class Gen_Img():
 
 if __name__ == "__main__":
     generator = Gen_Img()
-    generator.gen_img("Xiao")
+    generator.gen_img("Cassandra")
