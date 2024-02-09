@@ -49,9 +49,9 @@ class Gen_Img():
         self.draw.text(self.cur_pos, text, font=self.cur_font, fill=self.font_color)
 
     def gen_img(self, RemarkName=""):
-        header = "祝" + RemarkName + "，"
+        header = "祝" + RemarkName + ":"
         msg = u"龙腾四海，"
-        msg2 = u"瑞气盈门。"
+        msg2 = u"瑞气盈门!"
         footer  = u"             Zack"
         footer2 = u"             zackLight.com"
 
@@ -76,4 +76,4 @@ class Gen_Img():
 
 if __name__ == "__main__":
     generator = Gen_Img()
-    generator.gen_img("Cassandra")
+    generator.gen_img("您")
