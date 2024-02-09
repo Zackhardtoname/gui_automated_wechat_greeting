@@ -8,7 +8,7 @@ from io import BytesIO
 class Gen_Img():
     def __init__(self):
         self.font_family = "font_families/字小魂国风少年体.ttf"
-        self.header_font_size = 40
+        self.header_font_size = 45
         self.line_separation = 0
 
         self.header_font = ImageFont.truetype(self.font_family, self.header_font_size)
@@ -52,11 +52,11 @@ class Gen_Img():
         header = "祝" + RemarkName + ":"
         msg = u"龙腾四海，"
         msg2 = u"瑞气盈门!"
-        footer  = u"             Zack"
-        footer2 = u"             zackLight.com"
+        footer  = u"      Zack"
+        footer2 = u"     zackLight.com"
 
         self.draw = ImageDraw.Draw(self.img)
-        self.cur_pos = (220, 20)
+        self.cur_pos = (270, 20)
 
         self.cur_font = self.header_font
         self.draw.text(self.cur_pos, header, font=self.cur_font, fill=self.font_color)
