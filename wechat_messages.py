@@ -1,4 +1,5 @@
 # coding=utf8
+import time
 from sys import stderr
 
 import pyperclip
@@ -37,7 +38,7 @@ def get_friends():
     # Get a list of current friends and save results into a file locally
     # Every year, delete the pkl file before the process
     try:
-        with open(f'{year}_friends.pkl', 'rb') as f:
+        with open(f'friends.pkl', 'rb') as f:
             friends = pickle.load(f)
     except FileNotFoundError:
         friends = []
@@ -80,26 +81,30 @@ def paste_img(name_to_use):
 
 def paste_wish(name_to_use):
     pyperclip.copy("")
-    wish = f'祝{name_to_use}2024年龙腾万里，福禄双全! 感谢过去一年里您的帮助!\n\nzackLight.com'
+    wish = f'祝{name_to_use}2024年龙腾万里，福禄双全! 我去年跳槽到到费城一家做高频交易的公司了,学到了很多新知识也认识了很多新朋友~ 感谢过去一年里您的帮助!\n\nzackLight.com'
     pyperclip.copy(wish)
     pyautogui.hotkey('ctrl', 'v')
 
 
 def send_wishes_gui():
     # missed = [""]
-    skip = ["Zack Light"]
+    divider = "皓怡"
+    post = False
+    skip = ["Zack Light", "佳恒", "晨瑜"]
     friends = get_friends()
 
     for i in tqdm(range(len(friends))):
         friend = friends[i]
         name_to_use = friend["username"]
+        if name_to_use == divider:
+            post = True
 
-        if not friend or name_to_use in skip or "sent" in friend:
+        if not name_to_use or name_to_use in skip or "fully_done" in friend:
             continue
 
         print(f"{name_to_use}")
 
-        # search
+        # # search
         click(search_bar, 2)
         pyperclip.copy("")
         pyperclip.copy(name_to_use)
@@ -108,10 +113,18 @@ def send_wishes_gui():
 
         # send
         pyperclip.copy("")
-        paste_wish(name_to_use)
-        paste_img(name_to_use)
+        if post:
+            paste_wish(name_to_use)
+            paste_img(name_to_use)
+            time.sleep(1)
+        else:
+            pyperclip.copy("")
+            wish = f'我去年跳槽到到费城一家做高频交易的公司了,学到了很多新知识也认识了很多新朋友~'
+            pyperclip.copy(wish)
+            pyautogui.hotkey('ctrl', 'v')
+
         pyautogui.press('enter')
-        friend["sent"] = True
+        friend["fully_done"] = True
 
         # check_logged_in()
         with open('friends.pkl', 'wb') as f:

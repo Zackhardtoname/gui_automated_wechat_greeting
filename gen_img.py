@@ -52,7 +52,7 @@ class Gen_Img():
         header = "祝" + RemarkName + ":"
         msg = u"龙腾四海，"
         msg2 = u"瑞气盈门!"
-        footer  = u"      Zack"
+        footer  = u"      Zack in Philly"
         footer2 = u"     zackLight.com"
 
         self.draw = ImageDraw.Draw(self.img)
@@ -76,4 +76,4 @@ class Gen_Img():
 
 if __name__ == "__main__":
     generator = Gen_Img()
-    generator.gen_img("您")
+    generator.gen_img("Alexa")
