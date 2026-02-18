@@ -7,8 +7,7 @@ from PIL import Image, ImageFont, ImageDraw
 from io import BytesIO
 
 from wechaty import Wechaty, Contact, Message
-from wechaty_puppet import ScanStatus
-from filebox import FileBox
+from wechaty_puppet import ScanStatus, FileBox
 import qrcode_terminal
 
 # Configure logging
@@ -69,7 +68,7 @@ class ImageGenerator:
 
     def gen_img(self, remark_name: str) -> str:
         # Load the background image
-        bg_path = "./imgs/2024_traditional.jpg"
+        bg_path = "./imgs/2026.jpeg"
         if not os.path.exists(bg_path):
             log.warning(f"Background image {bg_path} not found. Creating a blank one.")
             img = Image.new('RGB', (800, 1200), color=(255, 0, 0)) # Red background as fallback
@@ -106,8 +105,7 @@ class LunarNewYearBot(Wechaty):
         self.generator = ImageGenerator()
         self.progress_file = 'progress.json'
         self.progress = self.load_progress()
-        self.skip_list = ["Zack Light", "佳恒", "晨瑜"]
-        self.divider = "皓怡"
+        self.skip_list = []
         self.is_sending = False
 
     def load_progress(self) -> Dict[str, bool]:
@@ -158,39 +156,29 @@ class LunarNewYearBot(Wechaty):
         # Sort alphabetically
         contacts_with_names.sort(key=lambda x: x[0])
         log.info(f'Processing {len(contacts_with_names)} individual contacts after sorting.')
-        
-        post_mode = False
-        
+
         for name, contact in contacts_with_names:
-            if name == self.divider:
-                log.info(f"Reached divider: {name}. Switching to post mode.")
-                post_mode = True
-                
             if name in self.skip_list:
                 log.debug(f"Skipping {name} (in skip list)")
                 continue
-                
+
             if self.progress.get(name):
                 log.debug(f"Skipping {name} (already done)")
                 continue
             
-            log.info(f'Processing {name} (Mode: {"POST" if post_mode else "SHORT"})...')
+            log.info(f'Processing {name}')
             
             try:
-                if post_mode:
-                    wish = (f'祝{name}2024年龙腾万里，福禄双全! '
-                            f'我去年跳槽到到费城一家做高频交易的公司了,学到了很多新知识也认识了很多新朋友~ '
-                            f'感谢过去一年里您的帮助!\n\nzackLight.com')
-                    await contact.say(wish)
-                    
-                    img_path = self.generator.gen_img(name)
-                    file_box = FileBox.from_file(img_path)
-                    await contact.say(file_box)
-                    await asyncio.sleep(3) # Throttle to avoid being flagged
-                else:
-                    wish = '我去年跳槽到到费城一家做高频交易的公司了,学到了很多新知识也认识了很多新朋友~'
-                    await contact.say(wish)
-                    await asyncio.sleep(1.5)
+                wish = (f'祝{name}2026年千里扬蹄，好运连连！马到成功！'
+                        f'去年我基本是在竞业期(旅游)中度过，自己组装了一台电脑，还做了个颇有成就的YouTube频道。'
+                        f'今年搬到曼哈顿后，我开始在城堡证券 (Citadel Securities) 工作了。'
+                        f'欢迎来纽约找我玩！\n\nzackLight.com')
+                await contact.say(wish)
+
+                img_path = self.generator.gen_img(name)
+                file_box = FileBox.from_file(img_path)
+                await contact.say(file_box)
+                await asyncio.sleep(3) # Throttle to avoid being flagged
 
                 self.progress[name] = True
                 self.save_progress()
